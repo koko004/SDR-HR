@@ -48,18 +48,18 @@ export default function SystemMonitor() {
   if (loading) {
     return (
       <div className="panel">
-        <h2>Monitor del Sistema</h2>
-        <p className="status-text">Cargando...</p>
+        <h2>System Monitor</h2>
+        <p className="status-text">Loading...</p>
       </div>
     );
   }
 
   return (
     <div className="panel">
-      <h2>Monitor del Sistema</h2>
+      <h2>System Monitor</h2>
       <div className="system-grid">
         <div className="sys-item">
-          <span className="sys-label">Temperatura</span>
+          <span className="sys-label">Temperature</span>
           <span className={`sys-value ${parseFloat(data.temp) > 60 ? 'sys-warn' : ''}`}>
             {data.temp}
           </span>
@@ -97,11 +97,11 @@ export default function SystemMonitor() {
           </div>
         </div>
         <div className="sys-item">
-          <span className="sys-label">Red RX</span>
+          <span className="sys-label">Net RX</span>
           <span className="sys-value sys-net-rx">{data.net.rx}</span>
         </div>
         <div className="sys-item">
-          <span className="sys-label">Red TX</span>
+          <span className="sys-label">Net TX</span>
           <span className="sys-value sys-net-tx">{data.net.tx}</span>
         </div>
         <div className="sys-item sys-full">

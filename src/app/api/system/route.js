@@ -8,7 +8,7 @@ const exec = promisify(nodeExec);
 function formatNetBytes(bytes) {
   if (!bytes || bytes === 0) return '0 B';
   const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
@@ -30,6 +30,21 @@ function safeReadFile(path) {
   } catch {
     return null;
   }
+}
+
+function findNetInterface() {
+  try {
+    const entries = fs.readdirSync('/sys/class/net', { withFileTypes: true });
+    for (const entry of entries) {
+      const name = entry.name;
+      if (name === 'lo') continue;
+      const rxPath = `/sys/class/net/${name}/statistics/rx_bytes`;
+      if (fs.existsSync(rxPath)) return name;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
 }
 
 export async function GET() {
@@ -55,7 +70,8 @@ export async function GET() {
     let cpu = 'N/A';
     try {
       const { stdout } = await exec("top -bn1 | grep 'Cpu(s)' | awk '{print $2}'");
-      cpu = stdout.trim() + '%';
+      const val = parseFloat(stdout.trim());
+      if (!isNaN(val)) cpu = val.toFixed(1) + '%';
     } catch {
       cpu = 'N/A';
     }
@@ -79,15 +95,16 @@ export async function GET() {
       // ignore
     }
 
-    // Network stats
+    // Network stats - detect interface dynamically
     let netRx = '0 B';
     let netTx = '0 B';
-    const rxBytes = safeReadFile('/sys/class/net/eth0/statistics/rx_bytes')
-      || safeReadFile('/sys/class/net/wlan0/statistics/rx_bytes');
-    const txBytes = safeReadFile('/sys/class/net/eth0/statistics/tx_bytes')
-      || safeReadFile('/sys/class/net/wlan0/statistics/tx_bytes');
-    if (rxBytes) netRx = formatNetBytes(parseInt(rxBytes) || 0);
-    if (txBytes) netTx = formatNetBytes(parseInt(txBytes) || 0);
+    const iface = findNetInterface();
+    if (iface) {
+      const rxBytes = safeReadFile(`/sys/class/net/${iface}/statistics/rx_bytes`);
+      const txBytes = safeReadFile(`/sys/class/net/${iface}/statistics/tx_bytes`);
+      if (rxBytes) netRx = formatNetBytes(parseInt(rxBytes) || 0);
+      if (txBytes) netTx = formatNetBytes(parseInt(txBytes) || 0);
+    }
 
     // Uptime
     let uptime = 'N/A';

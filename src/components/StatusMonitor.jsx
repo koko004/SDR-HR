@@ -33,32 +33,32 @@ export default function StatusMonitor() {
   if (loading) {
     return (
       <div className="panel">
-        <h2>Monitor de Estado</h2>
-        <p className="status-text">Cargando...</p>
+        <h2>Service Status</h2>
+        <p className="status-text">Loading...</p>
       </div>
     );
   }
 
   return (
     <div className="panel">
-      <h2>Monitor de Estado</h2>
+      <h2>Service Status</h2>
       <div className="status-cards">
         <div className="status-item">
           <span className="status-name">OpenWebRX</span>
           <span className={`badge ${status.openwebrx ? 'badge-green' : 'badge-red'}`}>
-            {status.openwebrx ? 'ACTIVO' : 'INACTIVO'}
+            {status.openwebrx ? 'ACTIVE' : 'INACTIVE'}
           </span>
         </div>
         <div className="status-item">
           <span className="status-name">SpyServer</span>
           <span className={`badge ${status.spyserver ? 'badge-green' : 'badge-red'}`}>
-            {status.spyserver ? 'ACTIVO' : 'INACTIVO'}
+            {status.spyserver ? 'ACTIVE' : 'INACTIVE'}
           </span>
         </div>
         <div className="status-item">
           <span className="status-name">rtl_tcp</span>
           <span className={`badge ${status.rtltcp ? 'badge-green' : 'badge-red'}`}>
-            {status.rtltcp ? 'ACTIVO' : 'INACTIVO'}
+            {status.rtltcp ? 'ACTIVE' : 'INACTIVE'}
           </span>
         </div>
       </div>

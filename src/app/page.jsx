@@ -13,7 +13,7 @@ export default function Home() {
     <div className="app">
       <header className="header">
         <h1>SDR-HR</h1>
-        <p>Gestor de Receptor RTL-SDR</p>
+        <p>SDR-Headless Remote</p>
       </header>
 
       <main className="main">

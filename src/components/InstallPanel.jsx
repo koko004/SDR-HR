@@ -33,7 +33,7 @@ export default function InstallPanel() {
   const runInstall = useCallback(
     async (endpoint, name, isReinstall = false) => {
       setInstalling(name);
-      setLogs(isReinstall ? `=== Reinstalando ${name} ===\n\n` : '');
+      setLogs(isReinstall ? `=== Reinstalling ${name} ===\n\n` : '');
 
       try {
         const res = await fetch(endpoint, { method: 'POST' });
@@ -81,7 +81,7 @@ export default function InstallPanel() {
   );
 
   const handleReinstall = (inst) => {
-    if (!confirm(`¿Reinstalar ${inst.name}? Esto detendrá el servicio y lo reinstalará desde cero.`)) {
+    if (!confirm(`Reinstall ${inst.name}? This will stop the service and reinstall it from scratch.`)) {
       return;
     }
     runInstall(inst.endpoint, inst.name, true);
@@ -89,7 +89,7 @@ export default function InstallPanel() {
 
   return (
     <div className="panel">
-      <h2>Panel de Instalacion</h2>
+      <h2>Installation Panel</h2>
       <div className="install-buttons">
         {INSTALLERS.map((inst) => {
           const isInstalled = status && status[`${inst.id}Installed`];
@@ -105,22 +105,22 @@ export default function InstallPanel() {
               >
                 {isInstalling ? (
                   <span className="spinner">
-                    <span className="spinner-dot" /> Instalando {inst.name}...
+                    <span className="spinner-dot" /> Installing {inst.name}...
                   </span>
                 ) : (
-                  `Instalar ${inst.name}`
+                  `Install ${inst.name}`
                 )}
               </button>
               {isInstalled && (
                 <div className="installed-info">
-                  <span className="installed-name">{inst.name} instalado</span>
+                  <span className="installed-name">{inst.name} installed</span>
                   <span className="installed-url">{url}</span>
                   <button
                     className="btn btn-reinstall"
                     onClick={() => handleReinstall(inst)}
                     disabled={isInstalling}
                   >
-                    Reinstalar
+                    Reinstall
                   </button>
                 </div>
               )}
