@@ -1,0 +1,43 @@
+# SDR-HR - Configuracion de sudoers para el usuario de la app
+#
+# INSTRUCCIONES:
+# 1. Ejecuta como root: visudo -f /etc/sudoers.d/sdr-hr
+# 2. O copia este archivo: cp SUDOERS /etc/sudoers.d/sdr-hr
+# 3. Asegura permisos correctos: chmod 0440 /etc/sudoers.d/sdr-hr
+#
+# Reemplaza "sdr" con el usuario que ejecuta Node.js/Bun
+# (ej: root, pi, orangepi, etc.)
+
+sdr ALL=(ALL) NOPASSWD: /usr/bin/systemctl start openwebrx, \
+    /usr/bin/systemctl stop openwebrx, \
+    /usr/bin/systemctl start spyserver, \
+    /usr/bin/systemctl stop spyserver, \
+    /usr/bin/systemctl start rtl_tcp, \
+    /usr/bin/systemctl stop rtl_tcp, \
+    /usr/bin/systemctl is-active openwebrx, \
+    /usr/bin/systemctl is-active spyserver, \
+    /usr/bin/systemctl is-active rtl_tcp, \
+    /usr/bin/systemctl daemon-reload, \
+    /usr/bin/systemctl enable spyserver, \
+    /usr/bin/systemctl enable rtl_tcp, \
+    /usr/bin/systemctl disable spyserver, \
+    /usr/bin/systemctl disable rtl_tcp, \
+    /usr/bin/apt-get update, \
+    /usr/bin/apt-get install *, \
+    /usr/bin/curl *, \
+    /usr/bin/tar *, \
+    /usr/bin/chmod *, \
+    /usr/bin/mkdir *, \
+    /usr/bin/rm *, \
+    /usr/bin/gpg *, \
+    /usr/bin/tee *, \
+    /usr/bin/echo *, \
+    /usr/bin/uname *, \
+    /usr/bin/which *, \
+    /usr/bin/top *, \
+    /usr/bin/free *, \
+    /usr/bin/cat /sys/class/thermal/thermal_zone0/temp, \
+    /usr/bin/cat /sys/class/hwmon/hwmon*/temp1_input, \
+    /usr/bin/cat /sys/class/net/*/statistics/rx_bytes, \
+    /usr/bin/cat /sys/class/net/*/statistics/tx_bytes, \
+    /usr/bin/cat /proc/uptime

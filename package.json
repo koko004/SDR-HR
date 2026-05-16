@@ -1,0 +1,15 @@
+{
+  "name": "sdr-hr",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_OPTIONS='--max-old-space-size=256' next dev -H 0.0.0.0 -p 3000",
+    "build": "NODE_OPTIONS='--max-old-space-size=512' NEXT_PRIVATE_WORKERS=1 next build",
+    "start": "NODE_OPTIONS='--max-old-space-size=256' next start -H 0.0.0.0 -p 3000"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

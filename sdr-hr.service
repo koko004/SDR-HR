@@ -1,0 +1,17 @@
+[Unit]
+Description=SDR-HR RTL-SDR Manager
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/sdr-hr
+ExecStart=/usr/bin/node /opt/sdr-hr/.next/standalone/server.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOSTNAME=0.0.0.0
+
+[Install]
+WantedBy=multi-user.target
