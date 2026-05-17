@@ -12,6 +12,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  swcMinify: false,
   webpack: (config) => {
     config.optimization.minimize = false;
     config.optimization.moduleIds = 'named';
