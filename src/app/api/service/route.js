@@ -36,14 +36,11 @@ export async function POST(req) {
       );
     }
 
-    if (mode === 'rtltcp') {
-      const { stdout } = await run('which rtl_tcp');
-      if (!stdout.trim()) {
-        return NextResponse.json(
-          { success: false, message: 'rtl_tcp not found. Install it first from the Installation Panel.' },
-          { status: 400 }
-        );
-      }
+    if (mode === 'rtltcp' && !fs.existsSync('/etc/systemd/system/rtl_tcp.service')) {
+      return NextResponse.json(
+        { success: false, message: 'rtl_tcp service not installed. Install it first from the Installation Panel.' },
+        { status: 400 }
+      );
     }
 
     if (mode === 'aiscatcher' && !fs.existsSync('/opt/aiscatcher/dispatcher') && !fs.existsSync('/usr/local/bin/dispatcher')) {
@@ -53,7 +50,7 @@ export async function POST(req) {
       );
     }
 
-    if (mode === 'signalk' && !fs.existsSync('/opt/signalk/node_modules/signalk-server')) {
+    if (mode === 'signalk' && !fs.existsSync('/etc/systemd/system/signalk.service')) {
       return NextResponse.json(
         { success: false, message: 'SignalK not installed. Install it first from the Installation Panel.' },
         { status: 400 }

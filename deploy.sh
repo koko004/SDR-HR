@@ -30,8 +30,8 @@ echo "[1/8] Instalando dependencias del sistema..."
 DEBIAN_FRONTEND=noninteractive apt-get update -y
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
   curl wget net-tools git \
-  build-essential cmake \
-  gnupg rtl-sdr libsox-fmt-all sox
+  build-essential cmake pkg-config \
+  gnupg rtl-sdr librtlsdr-dev libsox-fmt-all sox
 
 # Instalar Node.js si no existe
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
