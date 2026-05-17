@@ -70,6 +70,18 @@ export default function Orchestrator({ onModeChange }) {
       icon: '\u{1F50C}',
     },
     {
+      id: 'aiscatcher',
+      label: 'AIS Mode',
+      desc: 'AIS Catcher',
+      icon: '\u{1F6A2}',
+    },
+    {
+      id: 'signalk',
+      label: 'SignalK',
+      desc: 'Marine Data',
+      icon: '\u{1F30A}',
+    },
+    {
       id: 'off',
       label: 'Power Off',
       desc: 'Release USB',

@@ -12,6 +12,7 @@ export default function Home() {
   return (
     <div className="app">
       <header className="header">
+        <img src="/logo.png" alt="SDR-HR Logo" className="logo" />
         <h1>SDR-HR</h1>
         <p>SDR-Headless Remote</p>
       </header>
@@ -54,6 +55,12 @@ export default function Home() {
         .header {
           text-align: center;
           margin-bottom: 32px;
+        }
+
+        .logo {
+          width: 120px;
+          height: auto;
+          margin-bottom: 12px;
         }
 
         .header h1 {
@@ -173,6 +180,24 @@ export default function Home() {
 
         .btn-tertiary:hover:not(:disabled) {
           background: #047857;
+        }
+
+        .btn-ais {
+          background: #0891b2;
+          color: #fff;
+        }
+
+        .btn-ais:hover:not(:disabled) {
+          background: #0e7490;
+        }
+
+        .btn-signalk {
+          background: #d97706;
+          color: #fff;
+        }
+
+        .btn-signalk:hover:not(:disabled) {
+          background: #b45309;
         }
 
         .btn-reinstall {
@@ -433,7 +458,11 @@ export default function Home() {
 
         @media (max-width: 480px) {
           .mode-cards {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .status-cards {
+            grid-template-columns: repeat(2, 1fr);
           }
 
           .install-buttons {

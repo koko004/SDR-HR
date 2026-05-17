@@ -7,6 +7,8 @@ export default function StatusMonitor() {
     openwebrx: false,
     spyserver: false,
     rtltcp: false,
+    aiscatcher: false,
+    signalk: false,
     activeMode: 'off',
   });
   const [loading, setLoading] = useState(true);
@@ -39,28 +41,26 @@ export default function StatusMonitor() {
     );
   }
 
+  const services = [
+    { name: 'OpenWebRX', key: 'openwebrx' },
+    { name: 'SpyServer', key: 'spyserver' },
+    { name: 'rtl_tcp', key: 'rtltcp' },
+    { name: 'AIS Catcher', key: 'aiscatcher' },
+    { name: 'SignalK', key: 'signalk' },
+  ];
+
   return (
     <div className="panel">
       <h2>Service Status</h2>
       <div className="status-cards">
-        <div className="status-item">
-          <span className="status-name">OpenWebRX</span>
-          <span className={`badge ${status.openwebrx ? 'badge-green' : 'badge-red'}`}>
-            {status.openwebrx ? 'ACTIVE' : 'INACTIVE'}
-          </span>
-        </div>
-        <div className="status-item">
-          <span className="status-name">SpyServer</span>
-          <span className={`badge ${status.spyserver ? 'badge-green' : 'badge-red'}`}>
-            {status.spyserver ? 'ACTIVE' : 'INACTIVE'}
-          </span>
-        </div>
-        <div className="status-item">
-          <span className="status-name">rtl_tcp</span>
-          <span className={`badge ${status.rtltcp ? 'badge-green' : 'badge-red'}`}>
-            {status.rtltcp ? 'ACTIVE' : 'INACTIVE'}
-          </span>
-        </div>
+        {services.map((svc) => (
+          <div key={svc.key} className="status-item">
+            <span className="status-name">{svc.name}</span>
+            <span className={`badge ${status[svc.key] ? 'badge-green' : 'badge-red'}`}>
+              {status[svc.key] ? 'ACTIVE' : 'INACTIVE'}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

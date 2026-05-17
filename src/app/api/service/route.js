@@ -7,9 +7,10 @@ export async function POST(req) {
     const body = await req.json();
     const { mode } = body;
 
-    if (!['openwebrx', 'spyserver', 'rtltcp', 'off'].includes(mode)) {
+    const validModes = ['openwebrx', 'spyserver', 'rtltcp', 'aiscatcher', 'signalk', 'off'];
+    if (!validModes.includes(mode)) {
       return NextResponse.json(
-        { error: 'Invalid mode. Use: openwebrx, spyserver, rtltcp, or off' },
+        { error: `Invalid mode. Use: ${validModes.join(', ')}` },
         { status: 400 }
       );
     }
@@ -18,6 +19,8 @@ export async function POST(req) {
       await run('systemctl stop openwebrx 2>/dev/null');
       await run('systemctl stop spyserver 2>/dev/null');
       await run('systemctl stop rtl_tcp 2>/dev/null');
+      await run('systemctl stop aiscatcher 2>/dev/null');
+      await run('systemctl stop signalk 2>/dev/null');
       await new Promise((r) => setTimeout(r, 1000));
       return NextResponse.json({
         success: true,
@@ -43,13 +46,35 @@ export async function POST(req) {
       }
     }
 
-    const allServices = ['openwebrx', 'spyserver', 'rtltcp'];
+    if (mode === 'aiscatcher' && !fs.existsSync('/opt/aiscatcher/dispatcher') && !fs.existsSync('/usr/local/bin/dispatcher')) {
+      return NextResponse.json(
+        { success: false, message: 'AIS Catcher not installed. Install it first from the Installation Panel.' },
+        { status: 400 }
+      );
+    }
+
+    if (mode === 'signalk' && !fs.existsSync('/opt/signalk/node_modules/signalk-server')) {
+      return NextResponse.json(
+        { success: false, message: 'SignalK not installed. Install it first from the Installation Panel.' },
+        { status: 400 }
+      );
+    }
+
+    const allServices = ['openwebrx', 'spyserver', 'rtltcp', 'aiscatcher', 'signalk'];
     const stopOthers = allServices.filter((s) => s !== mode);
 
-    const serviceName = mode === 'rtltcp' ? 'rtl_tcp' : mode;
+    const serviceNameMap = {
+      openwebrx: 'openwebrx',
+      spyserver: 'spyserver',
+      rtltcp: 'rtl_tcp',
+      aiscatcher: 'aiscatcher',
+      signalk: 'signalk',
+    };
+
+    const serviceName = serviceNameMap[mode];
 
     for (const svc of stopOthers) {
-      const svcName = svc === 'rtltcp' ? 'rtl_tcp' : svc;
+      const svcName = serviceNameMap[svc];
       await run(`systemctl stop ${svcName} 2>/dev/null`);
     }
     await run(`systemctl stop ${serviceName} 2>/dev/null`);

@@ -7,6 +7,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="/opt/sdr-hr"
+CURRENT_USER=$(whoami)
 
 echo "=========================================="
 echo "  SDR-HR - Deploy Autonomo"
@@ -25,7 +26,7 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-echo "[1/7] Instalando dependencias del sistema..."
+echo "[1/8] Instalando dependencias del sistema..."
 DEBIAN_FRONTEND=noninteractive apt-get update -y
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
   curl wget net-tools git \
@@ -39,7 +40,7 @@ if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
   DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
 fi
 
-echo "[2/7] Compilando e instalando rtl_ais..."
+echo "[2/8] Compilando e instalando rtl_ais..."
 if command -v rtl_ais &> /dev/null; then
   echo "  -> rtl_ais ya instalado, saltando."
 else
@@ -54,7 +55,7 @@ else
   echo "  -> rtl_ais instalado en /usr/local/bin/rtl_ais"
 fi
 
-echo "[3/7] Configurando memoria swap (optimizacion para dispositivos con poca RAM)..."
+echo "[3/8] Configurando memoria swap (optimizacion para dispositivos con poca RAM)..."
 if [ "$(swapon --show | wc -l)" -eq 0 ]; then
   echo "  -> Creando 512MB de swap..."
   fallocate -l 512M /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=512
@@ -66,14 +67,14 @@ else
   echo "  -> Swap ya existe, saltando."
 fi
 
-echo "[4/7] Preparando directorio de instalacion..."
+echo "[4/8] Preparando directorio de instalacion..."
 mkdir -p "$APP_DIR"
 
 # Limpiar directorio de destino completamente para evitar archivos residuales
 rm -rf "$APP_DIR/src" "$APP_DIR/.next" "$APP_DIR/node_modules"
 rm -f "$APP_DIR/package.json" "$APP_DIR/next.config.js" "$APP_DIR/SUDOERS" "$APP_DIR/sdr-hr.service"
 
-echo "[5/7] Copiando archivos del proyecto..."
+echo "[5/8] Copiando archivos del proyecto..."
 cp -a "$SCRIPT_DIR/." "$APP_DIR/"
 rm -rf "$APP_DIR/node_modules" "$APP_DIR/.next" "$APP_DIR/deploy.sh"
 
@@ -89,28 +90,27 @@ if [ "$TS_COUNT" -gt 0 ]; then
   find "$APP_DIR/src" -name "*.ts" -o -name "*.tsx" | xargs rm -f
 fi
 
-echo "[6/7] Instalando dependencias de Node.js..."
+echo "[6/8] Instalando dependencias de Node.js..."
 cd "$APP_DIR"
 npm install --production
 
-echo "[7/7] Construyendo la aplicacion Next.js (modo optimizado para baja memoria)..."
+echo "[7/8] Construyendo la aplicacion Next.js (modo optimizado para baja memoria)..."
 npm run build
 
-echo "[8/8] Copiando archivos estaticos al directorio standalone..."
+echo "[8/8] Configurando permisos y servicios..."
+
+# Copiar estaticos para modo standalone
 cp -r "$APP_DIR/.next/static" "$APP_DIR/.next/standalone/.next/"
 if [ -d "$APP_DIR/public" ]; then
   cp -r "$APP_DIR/public" "$APP_DIR/.next/standalone/"
 fi
 echo "  -> Archivos estaticos copiados"
 
-echo "[9/8] Configurando permisos y servicios..."
-
-# Sudoers
+# Sudoers - reemplazar 'sdr' con el usuario actual automaticamente
 if [ -f "$APP_DIR/SUDOERS" ]; then
-  cp "$APP_DIR/SUDOERS" /etc/sudoers.d/sdr-hr
+  sed "s/^sdr /${CURRENT_USER} /g" "$APP_DIR/SUDOERS" > /etc/sudoers.d/sdr-hr
   chmod 0440 /etc/sudoers.d/sdr-hr
-  echo "  -> Sudoers configurado en /etc/sudoers.d/sdr-hr"
-  echo "     IMPORTANTE: Edita /etc/sudoers.d/sdr-hr y cambia 'sdr' por tu usuario real"
+  echo "  -> Sudoers configurado para usuario: ${CURRENT_USER}"
 fi
 
 # Systemd
@@ -118,7 +118,8 @@ if [ -f "$APP_DIR/sdr-hr.service" ]; then
   cp "$APP_DIR/sdr-hr.service" /etc/systemd/system/
   systemctl daemon-reload
   systemctl enable sdr-hr
-  echo "  -> Servicio systemd habilitado"
+  systemctl start sdr-hr
+  echo "  -> Servicio systemd habilitado e iniciado"
 fi
 
 echo ""
@@ -126,11 +127,11 @@ echo "=========================================="
 echo "  Deploy completado exitosamente"
 echo "=========================================="
 echo ""
-echo "Iniciar la aplicacion:"
-echo "  systemctl start sdr-hr"
+echo "La app estara disponible en: http://<IP>:3000"
 echo ""
-echo "Ver estado:"
+echo "Ver estado del servicio:"
 echo "  systemctl status sdr-hr"
 echo ""
-echo "La app estara disponible en: http://<IP>:3000"
+echo "Ver logs:"
+echo "  journalctl -u sdr-hr -f"
 echo ""

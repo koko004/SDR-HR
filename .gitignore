@@ -5,3 +5,10 @@ dist/
 *.tgz
 .env
 .env.local
+*.zip
+*.png
+!src/app/logo.png
+!src/app/favicon*
+!src/app/apple-touch-icon.png
+!src/app/web-app-manifest*
+!src/app/site.webmanifest
