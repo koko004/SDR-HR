@@ -72,7 +72,7 @@ mkdir -p "$APP_DIR"
 
 # Limpiar directorio de destino completamente para evitar archivos residuales
 rm -rf "$APP_DIR/src" "$APP_DIR/.next" "$APP_DIR/node_modules"
-rm -f "$APP_DIR/package.json" "$APP_DIR/next.config.js" "$APP_DIR/SUDOERS" "$APP_DIR/sdr-hr.service" "$APP_DIR/.babelrc"
+rm -f "$APP_DIR/package.json" "$APP_DIR/next.config.js" "$APP_DIR/SUDOERS" "$APP_DIR/sdr-hr.service"
 
 echo "[5/8] Copiando archivos del proyecto..."
 cp -a "$SCRIPT_DIR/." "$APP_DIR/"

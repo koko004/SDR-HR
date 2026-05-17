@@ -4,7 +4,7 @@
 # Este archivo se configura automaticamente durante el deploy.
 # No es necesario editarlo manualmente.
 
-CURRENT_USER ALL=(ALL) NOPASSWD: /usr/bin/systemctl start openwebrx, \
+sdr ALL=(ALL) NOPASSWD: /usr/bin/systemctl start openwebrx, \
     /usr/bin/systemctl stop openwebrx, \
     /usr/bin/systemctl start spyserver, \
     /usr/bin/systemctl stop spyserver, \
