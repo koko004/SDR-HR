@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--max-old-space-size=256' next dev -H 0.0.0.0 -p 3000",
-    "build": "NODE_OPTIONS='--max-old-space-size=384' NEXT_PRIVATE_WORKERS=1 TURBOPACK=0 next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=384' NEXT_PRIVATE_WORKERS=1 next build",
     "start": "NODE_OPTIONS='--max-old-space-size=256' next start -H 0.0.0.0 -p 3000"
   },
   "dependencies": {
