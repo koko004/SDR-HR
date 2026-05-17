@@ -57,8 +57,8 @@ fi
 
 echo "[3/8] Configurando memoria swap (optimizacion para dispositivos con poca RAM)..."
 if [ "$(swapon --show | wc -l)" -eq 0 ]; then
-  echo "  -> Creando 512MB de swap..."
-  fallocate -l 512M /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=512
+  echo "  -> Creando 2GB de swap..."
+  fallocate -l 2G /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=2048
   chmod 600 /swapfile
   mkswap /swapfile
   swapon /swapfile

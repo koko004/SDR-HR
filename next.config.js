@@ -17,6 +17,11 @@ const nextConfig = {
     config.optimization.moduleIds = 'named';
     return config;
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
 };
 
 module.exports = nextConfig;
