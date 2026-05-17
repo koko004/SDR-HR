@@ -1,6 +1,8 @@
 import { run } from '../../../../lib/exec.js';
+import * as fs from 'fs';
 
 const encoder = new TextEncoder();
+const AIS_DISPATCHER_SERVICE = '/etc/systemd/system/aisdispatcher.service';
 
 async function streamResponse(req, handler) {
   const stream = new TransformStream();
@@ -28,14 +30,21 @@ async function streamResponse(req, handler) {
 export async function POST(req) {
   return streamResponse(req, async (writeLog) => {
     try {
-      await writeLog('[1/2] Disabling old aiscatcher service if present...\n');
-      await run('systemctl disable aiscatcher.service 2>/dev/null');
+      await writeLog('[1/4] Installing dependency (aha)...\n');
+      await run('apt-get install -y aha');
 
-      await writeLog('[2/2] Installing AIS Catcher via official script...\n');
-      await run('bash -c "$(curl -fsSL https://raw.githubusercontent.com/jvde-github/AIS-catcher/main/scripts/aiscatcher-install) -p"');
+      await writeLog('[2/4] Downloading AIS Dispatcher installer...\n');
+      await run('wget -O /tmp/install_dispatcher https://www.aishub.net/downloads/dispatcher/install_dispatcher');
+      await run('chmod 755 /tmp/install_dispatcher');
 
-      await writeLog('\nAIS Catcher installed successfully.\n');
-      await writeLog('Access: http://<IP>:8100\n');
+      await writeLog('[3/4] Running AIS Dispatcher installer...\n');
+      await run('cd /tmp && ./install_dispatcher -y');
+
+      await writeLog('[4/4] Enabling AIS Dispatcher service...\n');
+      await run('systemctl enable aiscatcher');
+
+      await writeLog('\nAIS Dispatcher installed successfully.\n');
+      await writeLog('Access: http://<IP>:8080 (default: admin/admin)\n');
       await writeLog('DONE');
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Unknown error';

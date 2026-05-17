@@ -7,7 +7,7 @@ export async function POST(req) {
     const body = await req.json();
     const { mode } = body;
 
-    const validModes = ['openwebrx', 'spyserver', 'rtltcp', 'aiscatcher', 'signalk', 'off'];
+    const validModes = ['openwebrx', 'spyserver', 'rtltcp', 'aisdispatcher', 'aiscatcher', 'signalk', 'off'];
     if (!validModes.includes(mode)) {
       return NextResponse.json(
         { error: `Invalid mode. Use: ${validModes.join(', ')}` },
@@ -43,7 +43,14 @@ export async function POST(req) {
       );
     }
 
-    if (mode === 'aiscatcher' && !fs.existsSync('/opt/aiscatcher/dispatcher') && !fs.existsSync('/usr/local/bin/dispatcher')) {
+    if (mode === 'aisdispatcher' && !fs.existsSync('/usr/local/bin/dispatcher')) {
+      return NextResponse.json(
+        { success: false, message: 'AIS Dispatcher not installed. Install it first from the Installation Panel.' },
+        { status: 400 }
+      );
+    }
+
+    if (mode === 'aiscatcher' && !fs.existsSync('/usr/local/bin/AIS-catcher')) {
       return NextResponse.json(
         { success: false, message: 'AIS Catcher not installed. Install it first from the Installation Panel.' },
         { status: 400 }
@@ -57,13 +64,14 @@ export async function POST(req) {
       );
     }
 
-    const allServices = ['openwebrx', 'spyserver', 'rtltcp', 'aiscatcher', 'signalk'];
+    const allServices = ['openwebrx', 'spyserver', 'rtltcp', 'aisdispatcher', 'aiscatcher', 'signalk'];
     const stopOthers = allServices.filter((s) => s !== mode);
 
     const serviceNameMap = {
       openwebrx: 'openwebrx',
       spyserver: 'spyserver',
       rtltcp: 'rtl_tcp',
+      aisdispatcher: 'aiscatcher',
       aiscatcher: 'aiscatcher',
       signalk: 'signalk',
     };

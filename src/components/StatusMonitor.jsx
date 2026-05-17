@@ -7,6 +7,7 @@ export default function StatusMonitor() {
     openwebrx: false,
     spyserver: false,
     rtltcp: false,
+    aisdispatcher: false,
     aiscatcher: false,
     signalk: false,
     activeMode: 'off',
@@ -45,6 +46,7 @@ export default function StatusMonitor() {
     { name: 'OpenWebRX', key: 'openwebrx' },
     { name: 'SpyServer', key: 'spyserver' },
     { name: 'rtl_tcp', key: 'rtltcp' },
+    { name: 'AIS Dispatcher', key: 'aisdispatcher' },
     { name: 'AIS Catcher', key: 'aiscatcher' },
     { name: 'SignalK', key: 'signalk' },
   ];

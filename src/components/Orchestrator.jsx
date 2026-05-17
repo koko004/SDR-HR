@@ -70,10 +70,16 @@ export default function Orchestrator({ onModeChange }) {
       icon: '\u{1F50C}',
     },
     {
-      id: 'aiscatcher',
-      label: 'AIS Mode',
-      desc: 'AIS Catcher',
+      id: 'aisdispatcher',
+      label: 'AIS Disp.',
+      desc: 'Dispatcher',
       icon: '\u{1F6A2}',
+    },
+    {
+      id: 'aiscatcher',
+      label: 'AIS Catcher',
+      desc: 'jvde-github',
+      icon: '\u{2693}',
     },
     {
       id: 'signalk',

@@ -28,6 +28,7 @@ export async function GET() {
       openwebrx,
       spyserver,
       rtltcp,
+      aisdispatcher: aiscatcher,
       aiscatcher,
       signalk,
       activeMode,

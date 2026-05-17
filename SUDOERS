@@ -44,4 +44,5 @@ sdr ALL=(ALL) NOPASSWD: /usr/bin/systemctl start openwebrx, \
     /usr/bin/wget *, \
     /usr/bin/cd *, \
     /usr/bin/make, \
-    /usr/bin/git *
+    /usr/bin/git *, \
+    /usr/bin/bash *

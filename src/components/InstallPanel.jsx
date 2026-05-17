@@ -6,6 +6,7 @@ const INSTALLERS = [
   { id: 'openwebrx', name: 'OpenWebRX', endpoint: '/api/install/openwebrx', btnClass: 'btn-primary' },
   { id: 'spyserver', name: 'SpyServer', endpoint: '/api/install/spyserver', btnClass: 'btn-secondary' },
   { id: 'rtltcp', name: 'rtl_tcp', endpoint: '/api/install/rtltcp', btnClass: 'btn-tertiary' },
+  { id: 'aisdispatcher', name: 'AIS Dispatcher', endpoint: '/api/install/aisdispatcher', btnClass: 'btn-ais' },
   { id: 'aiscatcher', name: 'AIS Catcher', endpoint: '/api/install/aiscatcher', btnClass: 'btn-ais' },
   { id: 'signalk', name: 'SignalK', endpoint: '/api/install/signalk', btnClass: 'btn-signalk' },
 ];

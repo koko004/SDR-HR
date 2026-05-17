@@ -22,19 +22,22 @@ export async function GET() {
     const openwebrxInstalled = await run('dpkg -s openwebrx 2>/dev/null | grep -q "Status: install" && echo yes || echo no');
     const spyserverInstalled = fs.existsSync('/opt/spyserver/spyserver');
     const rtltcpInstalled = fs.existsSync('/etc/systemd/system/rtl_tcp.service');
-    const aiscatcherInstalled = fs.existsSync('/opt/aiscatcher/dispatcher') || fs.existsSync('/usr/local/bin/dispatcher');
+    const aisdispatcherInstalled = fs.existsSync('/usr/local/bin/dispatcher');
+    const aiscatcherInstalled = fs.existsSync('/usr/local/bin/AIS-catcher');
     const signalkInstalled = fs.existsSync('/etc/systemd/system/signalk.service');
 
     return NextResponse.json({
       openwebrxInstalled: openwebrxInstalled.stdout.trim() === 'yes',
       spyserverInstalled,
       rtltcpInstalled,
+      aisdispatcherInstalled,
       aiscatcherInstalled,
       signalkInstalled,
       openwebrxUrl: `http://${ip}:8073`,
       spyserverUrl: `${ip}:5555`,
       rtltcpUrl: `${ip}:1234`,
-      aiscatcherUrl: `http://${ip}:8080`,
+      aisdispatcherUrl: `http://${ip}:8080`,
+      aiscatcherUrl: `http://${ip}:8100`,
       signalkUrl: `http://${ip}:3001`,
     });
   } catch (err) {
