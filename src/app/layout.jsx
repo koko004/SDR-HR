@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'SDR-HR | SDR-Headless Remote',
   description: 'Web manager for RTL-SDR on Armbian/Debian',

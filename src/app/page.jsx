@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import InstallPanel from '../components/InstallPanel.jsx';
 import Orchestrator from '../components/Orchestrator.jsx';
