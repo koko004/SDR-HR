@@ -16,16 +16,21 @@ export async function POST(req) {
     }
 
     if (mode === 'off') {
-      await run('systemctl stop openwebrx 2>/dev/null');
-      await run('systemctl stop spyserver 2>/dev/null');
-      await run('systemctl stop rtl_tcp 2>/dev/null');
-      await run('systemctl stop aiscatcher 2>/dev/null');
-      await run('systemctl stop signalk 2>/dev/null');
-      await new Promise((r) => setTimeout(r, 1000));
+      const allServiceNames = ['openwebrx', 'spyserver', 'rtl_tcp', 'aiscatcher', 'signalk'];
+      for (const svc of allServiceNames) {
+        await run(`systemctl stop ${svc} 2>/dev/null`);
+        await run(`systemctl kill ${svc} 2>/dev/null`);
+      }
+      await run("pkill -f openwebrx 2>/dev/null");
+      await run("pkill -f spyserver 2>/dev/null");
+      await run("pkill -f rtl_tcp 2>/dev/null");
+      await run("pkill -f AIS-catcher 2>/dev/null");
+      await run("pkill -f signalk 2>/dev/null");
+      await new Promise((r) => setTimeout(r, 2000));
       return NextResponse.json({
         success: true,
         mode: 'off',
-        message: 'All services stopped. USB tuner released.',
+        message: 'All services stopped and killed. USB tuner released.',
       });
     }
 
@@ -65,24 +70,16 @@ export async function POST(req) {
     }
 
     const allServices = ['openwebrx', 'spyserver', 'rtltcp', 'aisdispatcher', 'aiscatcher', 'signalk'];
-    const stopOthers = allServices.filter((s) => s !== mode);
-
-    const serviceNameMap = {
-      openwebrx: 'openwebrx',
-      spyserver: 'spyserver',
-      rtltcp: 'rtl_tcp',
-      aisdispatcher: 'aiscatcher',
-      aiscatcher: 'aiscatcher',
-      signalk: 'signalk',
-    };
-
-    const serviceName = serviceNameMap[mode];
-
-    for (const svc of stopOthers) {
-      const svcName = serviceNameMap[svc];
-      await run(`systemctl stop ${svcName} 2>/dev/null`);
+    // Stop all possible services first to ensure USB is free
+    const allKnownServices = ['openwebrx', 'spyserver', 'rtl_tcp', 'ais-catcher', 'signalk', 'ais-dispatcher'];
+    for (const svc of allKnownServices) {
+      await run(`systemctl stop ${svc} 2>/dev/null`);
+      await run(`systemctl kill ${svc} 2>/dev/null`);
     }
-    await run(`systemctl stop ${serviceName} 2>/dev/null`);
+    
+    // Add specific kill for AIS Dispatcher user session
+    await run('loginctl terminate-user ais 2>/dev/null');
+
     await new Promise((r) => setTimeout(r, 1200));
 
     await run(`systemctl start ${serviceName}`);

@@ -40,8 +40,12 @@ export async function POST(req) {
       await writeLog('[3/4] Running AIS Dispatcher installer...\n');
       await run('cd /tmp && ./install_dispatcher -y');
 
-      await writeLog('[4/4] Enabling AIS Dispatcher service...\n');
-      await run('systemctl enable aiscatcher');
+      await writeLog('[4/4] Enabling AIS Dispatcher service bridge...\n');
+      // Using the bridge we created earlier
+      await run('cp /opt/sdr-hr/ais-dispatcher.service /etc/systemd/system/');
+      await run('systemctl daemon-reload');
+      await run('systemctl enable ais-dispatcher');
+      await run('systemctl start ais-dispatcher');
 
       await writeLog('\nAIS Dispatcher installed successfully.\n');
       await writeLog('Access: http://<IP>:8080 (default: admin/admin)\n');

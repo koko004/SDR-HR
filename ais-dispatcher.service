@@ -1,0 +1,13 @@
+[Unit]
+Description=AIS Dispatcher Bridge
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/systemctl --user start user@ais.service
+ExecStop=/bin/systemctl --user stop user@ais.service
+Restart=always
+User=ais
+
+[Install]
+WantedBy=multi-user.target

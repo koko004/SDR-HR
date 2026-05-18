@@ -26,19 +26,15 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-echo "[1/8] Instalando dependencias del sistema..."
+echo "[0/8] Instalando Node.js y npm..."
 DEBIAN_FRONTEND=noninteractive apt-get update -y
+DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs npm
+
+echo "[1/8] Instalando dependencias del sistema..."
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
   curl wget net-tools git \
   build-essential cmake pkg-config \
   gnupg rtl-sdr librtlsdr-dev libsox-fmt-all sox
-
-# Instalar Node.js si no existe
-if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
-  echo "  -> Instalando Node.js 20.x..."
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-  DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
-fi
 
 echo "[2/8] Compilando e instalando rtl_ais..."
 if command -v rtl_ais &> /dev/null; then

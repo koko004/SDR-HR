@@ -64,6 +64,10 @@ export async function POST(req) {
       await run('apt-get update -y');
       await writeLog('[6/6] Installing openwebrx...\n');
       await run('apt-get install -y openwebrx');
+      
+      await writeLog('[Post-Install] Setting admin password to "admin"...\n');
+      await run('openwebrx admin adduser admin admin 2>/dev/null || openwebrx admin reset-password admin admin');
+
       await writeLog('\nOpenWebRX installed successfully.\n');
       await writeLog('DONE');
     } catch (err) {
