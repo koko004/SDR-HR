@@ -83,11 +83,11 @@ export default function InstallPanel() {
     [fetchStatus]
   );
 
-  const handleReinstall = (inst) => {
-    if (!confirm(`Reinstall ${inst.name}? This will stop the service and reinstall it from scratch.`)) {
+  const handleRemove = (inst) => {
+    if (!confirm(`Delete ${inst.name}? This will stop the service and remove all its files.`)) {
       return;
     }
-    runInstall(inst.endpoint, inst.name, true);
+    runInstall(`${inst.endpoint}/remove`, inst.name, true);
   };
 
   return (
@@ -104,26 +104,28 @@ export default function InstallPanel() {
               <button
                 className={`btn ${inst.btnClass}`}
                 onClick={() => runInstall(inst.endpoint, inst.name)}
-                disabled={isInstalling}
+                disabled={isInstalling || isInstalled}
               >
                 {isInstalling ? (
                   <span className="spinner">
                     <span className="spinner-dot" /> Installing {inst.name}...
                   </span>
+                ) : isInstalled ? (
+                  `${inst.name} Installed`
                 ) : (
                   `Install ${inst.name}`
                 )}
               </button>
               {isInstalled && (
                 <div className="installed-info">
-                  <span className="installed-name">{inst.name} installed</span>
+                  <span className="installed-name">{inst.name} active</span>
                   <span className="installed-url">{url}</span>
                   <button
-                    className="btn btn-reinstall"
-                    onClick={() => handleReinstall(inst)}
+                    className="btn btn-delete"
+                    onClick={() => handleRemove(inst)}
                     disabled={isInstalling}
                   >
-                    Reinstall
+                    Delete
                   </button>
                 </div>
               )}

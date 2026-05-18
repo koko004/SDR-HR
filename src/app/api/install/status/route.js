@@ -20,10 +20,10 @@ export async function GET() {
     const ip = await getLocalIP();
 
     const openwebrxInstalled = await run('dpkg -s openwebrx 2>/dev/null | grep -q "Status: install" && echo yes || echo no');
-    const spyserverInstalled = fs.existsSync('/opt/spyserver/spyserver');
+    const spyserverInstalled = fs.existsSync('/etc/systemd/system/spyserver.service');
     const rtltcpInstalled = fs.existsSync('/etc/systemd/system/rtl_tcp.service');
-    const aisdispatcherInstalled = fs.existsSync('/usr/local/bin/dispatcher');
-    const aiscatcherInstalled = fs.existsSync('/usr/local/bin/AIS-catcher');
+    const aisdispatcherInstalled = fs.existsSync('/etc/systemd/system/ais-dispatcher.service');
+    const aiscatcherInstalled = fs.existsSync('/etc/systemd/system/ais-catcher.service');
     const signalkInstalled = fs.existsSync('/etc/systemd/system/signalk.service');
 
     return NextResponse.json({
