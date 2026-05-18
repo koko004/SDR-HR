@@ -16,16 +16,13 @@ export async function POST(req) {
     }
 
     if (mode === 'off') {
-      const allServiceNames = ['openwebrx', 'spyserver', 'rtl_tcp', 'aiscatcher', 'signalk'];
-      for (const svc of allServiceNames) {
+      const allKnownServices = ['openwebrx', 'spyserver', 'rtl_tcp', 'ais-catcher', 'signalk', 'ais-dispatcher'];
+      for (const svc of allKnownServices) {
         await run(`systemctl stop ${svc} 2>/dev/null`);
         await run(`systemctl kill ${svc} 2>/dev/null`);
       }
-      await run("pkill -f openwebrx 2>/dev/null");
-      await run("pkill -f spyserver 2>/dev/null");
-      await run("pkill -f rtl_tcp 2>/dev/null");
-      await run("pkill -f AIS-catcher 2>/dev/null");
-      await run("pkill -f signalk 2>/dev/null");
+      await run('loginctl terminate-user ais 2>/dev/null');
+      
       await new Promise((r) => setTimeout(r, 2000));
       return NextResponse.json({
         success: true,
@@ -69,20 +66,15 @@ export async function POST(req) {
       );
     }
 
-    const allServices = ['openwebrx', 'spyserver', 'rtltcp', 'aisdispatcher', 'aiscatcher', 'signalk'];
-    // Stop all possible services first to ensure USB is free
-    const allKnownServices = ['openwebrx', 'spyserver', 'rtl_tcp', 'ais-catcher', 'signalk', 'ais-dispatcher'];
-    for (const svc of allKnownServices) {
-      await run(`systemctl stop ${svc} 2>/dev/null`);
-      await run(`systemctl kill ${svc} 2>/dev/null`);
-    }
-    
-    // Add specific kill for AIS Dispatcher user session
-    await run('loginctl terminate-user ais 2>/dev/null');
-
-    await new Promise((r) => setTimeout(r, 1200));
-
-    await run(`systemctl start ${serviceName}`);
+    const serviceNameMap = {
+      openwebrx: 'openwebrx',
+      spyserver: 'spyserver',
+      rtltcp: 'rtl_tcp',
+      aisdispatcher: 'ais-dispatcher',
+      aiscatcher: 'ais-catcher',
+      signalk: 'signalk',
+    };
+    const serviceName = serviceNameMap[mode];
 
     await new Promise((r) => setTimeout(r, 500));
     const { stdout } = await run(`systemctl is-active ${serviceName}`);
