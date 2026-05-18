@@ -1,4 +1,4 @@
-import { run } from '../../../../lib/exec.js';
+import { run } from "../../../../../lib/exec.js";
 import { NextResponse } from 'next/server';
 
 export async function POST() {
