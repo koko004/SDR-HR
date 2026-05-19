@@ -34,9 +34,9 @@ export default function InstallPanel() {
   }, [fetchStatus]);
 
   const runInstall = useCallback(
-    async (endpoint, name, isReinstall = false) => {
+    async (endpoint, name, operation = 'Installing') => {
       setInstalling(name);
-      setLogs(isReinstall ? `=== Reinstalling ${name} ===\n\n` : '');
+      setLogs(`=== ${operation} ${name} ===\n\n`);
 
       try {
         const res = await fetch(endpoint, { method: 'POST' });
@@ -63,6 +63,7 @@ export default function InstallPanel() {
               setLogs((prev) => prev + parsed.text);
               if (parsed.text === 'DONE') {
                 fetchStatus();
+                setLogs((prev) => prev + `\nOperation completed successfully.`);
               }
             } catch {
               // skip
@@ -87,7 +88,7 @@ export default function InstallPanel() {
     if (!confirm(`Delete ${inst.name}? This will stop the service and remove all its files.`)) {
       return;
     }
-    runInstall(`${inst.endpoint}/remove`, inst.name, true);
+    runInstall(`${inst.endpoint}/remove`, inst.name, 'Removing');
   };
 
   return (
@@ -108,7 +109,7 @@ export default function InstallPanel() {
               >
                 {isInstalling ? (
                   <span className="spinner">
-                    <span className="spinner-dot" /> Installing {inst.name}...
+                    <span className="spinner-dot" /> Processing {inst.name}...
                   </span>
                 ) : isInstalled ? (
                   `${inst.name} Installed`
