@@ -6,7 +6,8 @@ export async function POST() {
     await run('systemctl stop openwebrx 2>/dev/null');
     await run('systemctl disable openwebrx 2>/dev/null');
     await run('apt-get purge -y openwebrx');
-    await run('rm -f /etc/apt/sources.list.d/openwebrx.list');
+    await run('rm -f /lib/systemd/system/openwebrx.service');
+    await run('rm -f /etc/apt/sources.list.d/openwebrx-experimental.list /etc/apt/sources.list.d/openwebrx-plus.list /etc/apt/sources.list.d/openwebrx.list');
     await run('systemctl daemon-reload');
     return NextResponse.json({ success: true });
   } catch (err) {

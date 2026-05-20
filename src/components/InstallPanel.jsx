@@ -94,6 +94,13 @@ export default function InstallPanel() {
   return (
     <div className="panel">
       <h2>Installation Panel</h2>
+      
+      <div className="system-test">
+        <button className="btn btn-tertiary" onClick={() => runInstall('/api/system/rtl_test', 'RTL Test', 'Testing')}>
+          Run RTL_TEST
+        </button>
+      </div>
+
       <div className="install-buttons">
         {INSTALLERS.map((inst) => {
           const isInstalled = status && status[`${inst.id}Installed`];

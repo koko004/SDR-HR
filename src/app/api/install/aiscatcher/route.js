@@ -37,8 +37,8 @@ export async function POST(req) {
       await writeLog('[3/3] Configuring AIS Catcher service for web access...\n');
       // Update the config file to enable web server
       await run('sed -i \'s/"active":false/"active":true/\' /etc/AIS-catcher/config.json');
-      // Update the systemd service to include the required flags
-      await run("sed -i 's|ExecStart=/usr/bin/AIS-catcher.*|ExecStart=/usr/bin/AIS-catcher -N 8100 share_loc on -X -gr -G system on -o 0 -C /etc/AIS-catcher/config.json @/etc/AIS-catcher/config.cmd|' /etc/systemd/system/ais-catcher.service");
+      // Update the systemd service to include the required flags for port 8102
+      await run("sed -i 's|ExecStart=/usr/bin/AIS-catcher.*|ExecStart=/usr/bin/AIS-catcher -N 8102 share_loc on -X -gr -G system on -o 0 -C /etc/AIS-catcher/config.json @/etc/AIS-catcher/config.cmd|' /etc/systemd/system/ais-catcher.service");
       await run('systemctl daemon-reload');
       await run('systemctl restart ais-catcher.service');
 
