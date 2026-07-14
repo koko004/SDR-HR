@@ -1,5 +1,8 @@
 # SDR-HR (SDR-Headless Remote)
 
+<img width="1707" height="1734" alt="image" src="https://github.com/user-attachments/assets/fc521974-8aa5-49a9-99da-0eb77a5cbe9d" />
+
+
 Aplicación web para gestionar receptores RTL-SDR en sistemas empotrados Linux (Armbian/Debian). Actúa como instalador dinámico y orquestador de servicios SDR, permitiendo cambiar entre modos de operación sin acceso SSH.
 
 ## Características
